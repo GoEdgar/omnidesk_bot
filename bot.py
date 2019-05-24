@@ -71,6 +71,7 @@ def create_certificate():
         if 'webhook_' in dir:
             flag = False
     if flag:
+        os.system('apt install openssl')
         os.system('openssl req -new -x509 -key webhook_pkey.pem -out webhook_cert.pem -days 1095')
 
 async def on_startup():

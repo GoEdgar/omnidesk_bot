@@ -1,41 +1,26 @@
+import os
+import ssl
 import asyncio
-from aiogram import Bot, Dispatcher, types, executor
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.filters.state import State, StatesGroup
 import configparser
 from aiohttp import web
+from aiogram import Bot, Dispatcher, types, executor
+from aiogram.dispatcher.webhook import WebhookRequestHandler, get_new_configured_app
 from urllib.parse import parse_qs as urlencoded_to_dict
 
-
+from db_helpers import *
+from api_manager import ApiManager
 
 config = configparser.ConfigParser()
 config.read('config.ini')
 
 TOKEN = config['tokens']['bot']
 
-from db_helpers import *
-from api_manager import ApiManager, db
 
-InlineKeyboard = types.inline_keyboard.InlineKeyboardMarkup
-InlineButton = types.inline_keyboard.InlineKeyboardButton
-RemoveKeyboard = types.ReplyKeyboardRemove
-ReplyKeyboard = types.ReplyKeyboardMarkup
-ReplyButton = types.KeyboardButton
 
 bot = Bot(TOKEN, parse_mode='Markdown')
-
 dp = Dispatcher(bot)
+
 api = ApiManager()
-
-
-
-# def menu_btn(msg):
-#     btn = ReplyKeyboard(resize_keyboard=True)
-#     if db.user_ticket_count(msg.chat.id):
-#         btn.insert('Написать сообщение')
-#     else:
-#         btn.insert('Открыть тикет')
-#     return {'btn': btn}
 
 
 
@@ -62,11 +47,13 @@ async def message(msg: types.Message):
         await reply_msg.delete()
 
 
+
 async def omnidesk_msg_handler(data):
     user_id = int(data['object[custom_user_id]'][0])
     print(user_id)
     text = data['object[content]'][0]
     await bot.send_message(int(user_id), text)
+
 
 routes = web.RouteTableDef()
 
@@ -78,9 +65,29 @@ async def change_status(request):
         await omnidesk_msg_handler(data)
     return web.Response()
 
-app = web.Application()
-app.add_routes(routes)
+def create_certificate():
+    flag = True
+    for dir in os.listdir():
+        if 'webhook_' in dir:
+            flag = False
+    if flag:
+        os.system('openssl req -new -x509 -key webhook_pkey.pem -out webhook_cert.pem -days 1095')
 
-loop = asyncio.get_event_loop()
-loop.create_task(web._run_app(app, port=80))
-executor.start_webhook(dp, loop=loop)
+async def on_startup():
+    webhook = await bot.get_webhook_info()
+    if webhook.url:
+        await bot.delete_webhook()
+    await bot.set_webhook('https://54.74.165.49:80/tg', certificate=open(WEBHOOK_SSL_CERT, 'rb'))
+
+async def on_shutdown():
+    await bot.delete_webhook()
+
+if __name__ == '__main__':
+    create_certificate()
+    app = get_new_configured_app(dp, '/tg')
+    app.add_routes(routes)
+    app.on_startup.append(on_startup)
+    app.on_shutdown.append(on_shutdown)
+    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    context.load_cert_chain('./webhook_cert.pem', './webhook_pkey.pem')
+    web.run_app(app, port=80)

@@ -1,7 +1,3 @@
 
 
-class InvalidAuthData(Exception): pass
-
-class InvalidCookie(Exception): pass
-
-class CookieNotFound(Exception): pass
+class TicketError(Exception): pass

@@ -3,7 +3,7 @@ import sqlite3
 
 class DB():
     def __init__(self):
-        self.db_conn = sqlite3.connect('db.db', check_same_thread=False)
+        self.db_conn = sqlite3.connect('db.db')
     
     def fast_query(self, query, params=()):
         cursor = self.cursor()

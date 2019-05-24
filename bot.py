@@ -83,4 +83,4 @@ app.add_routes(routes)
 
 loop = asyncio.get_event_loop()
 loop.create_task(web._run_app(app, port=80))
-executor.start_polling(dp, loop=loop)
+executor.start_webhook(dp, loop=loop)

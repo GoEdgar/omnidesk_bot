@@ -65,30 +65,27 @@ async def change_status(request):
         await omnidesk_msg_handler(data)
     return web.Response()
 
-def create_certificate():
-    flag = True
-    for dir in os.listdir():
-        if 'webhook_' in dir:
-            flag = False
-    if flag:
-        os.system('apt install openssl')
-        os.system('openssl req -new -x509 -key webhook_pkey.pem -out webhook_cert.pem -days 1095')
+#def create_certificate():
+#    flag = True
+#    for dir in os.listdir():
+#        if 'webhook_' in dir:
+#            flag = False
+#    if flag:
+#        os.system('openssl req -new -x509 -key webhook_pkey.pem -out webhook_cert.pem -days 1095')
 
 async def on_startup():
     webhook = await bot.get_webhook_info()
     if webhook.url:
         await bot.delete_webhook()
-    await bot.set_webhook('https://54.74.165.49:80/tg', certificate=open(WEBHOOK_SSL_CERT, 'rb'))
+    await bot.set_webhook('https://54.74.165.49:80/tg')
 
 async def on_shutdown():
     await bot.delete_webhook()
 
 if __name__ == '__main__':
-    create_certificate()
+    #create_certificate()
     app = get_new_configured_app(dp, '/tg')
     app.add_routes(routes)
     app.on_startup.append(on_startup)
     app.on_shutdown.append(on_shutdown)
-    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-    context.load_cert_chain('./webhook_cert.pem', './webhook_pkey.pem')
     web.run_app(app, port=80)

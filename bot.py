@@ -73,13 +73,13 @@ async def change_status(request):
 #    if flag:
 #        os.system('openssl req -new -x509 -key webhook_pkey.pem -out webhook_cert.pem -days 1095')
 
-async def on_startup():
+async def on_startup(_):
     webhook = await bot.get_webhook_info()
     if webhook.url:
         await bot.delete_webhook()
     await bot.set_webhook('https://54.74.165.49:80/tg')
 
-async def on_shutdown():
+async def on_shutdown(_):
     await bot.delete_webhook()
 
 if __name__ == '__main__':

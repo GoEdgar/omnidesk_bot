@@ -88,4 +88,5 @@ if __name__ == '__main__':
     app.add_routes(routes)
     app.on_startup.append(on_startup)
     app.on_shutdown.append(on_shutdown)
+    os.environ['PORT'] = '80'
     web.run_app(app, port=80)

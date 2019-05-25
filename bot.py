@@ -80,11 +80,20 @@ async def on_startup(_):
 async def on_shutdown(_):
     await bot.delete_webhook()
 
+import time
+
+async def timer():
+    while True:
+        print(time.time())
+        await asyncio.sleep(1)
+    
 #create_certificate()
 # app = get_new_configured_app(dp, '/tg')
 app = web.Application()
 app.add_routes(routes)
-app.on_startup.append(on_startup)
+#app.on_startup.append(on_startup)
 app.on_shutdown.append(on_shutdown)
-
-web.run_app(app, port=int(os.environ['PORT']))
+loop = asyncio.get_event_loop()
+loop.create_task(timer())
+loop.create_task(web._run_app(app, port=80))
+loop.run_forever()

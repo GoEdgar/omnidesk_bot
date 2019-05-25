@@ -47,7 +47,6 @@ async def message(msg: types.Message):
         await reply_msg.delete()
 
 
-
 async def omnidesk_msg_handler(data):
     user_id = int(data['object[custom_user_id]'][0])
     print(user_id)
@@ -55,7 +54,14 @@ async def omnidesk_msg_handler(data):
     await bot.send_message(int(user_id), text)
 
 
+
+
 routes = web.RouteTableDef()
+
+@routes.get('/')
+async def hello(request):
+    print(request)
+    return web.Response(text='<Omnidesk bot> by @spooti')
 
 
 @routes.post('/omnidesk_message')
@@ -65,11 +71,6 @@ async def change_status(request):
         await omnidesk_msg_handler(data)
     return web.Response()
 
-@routes.get('/')
-async def hello(request):
-    print(request)
-    return web.Response(text='Hello')
-
 
 async def on_startup(_):
     webhook = await bot.get_webhook_info()
@@ -77,23 +78,16 @@ async def on_startup(_):
         await bot.delete_webhook()
     await bot.set_webhook(f'https://omnideskbot.herokuapp.com/tg')
 
+
 async def on_shutdown(_):
     await bot.delete_webhook()
 
-import time
 
-async def timer():
-    while True:
-        print(time.time())
-        await asyncio.sleep(1)
-    
-#create_certificate()
-# app = get_new_configured_app(dp, '/tg')
-app = web.Application()
+
+app = get_new_configured_app(dp, '/tg')
+
 app.add_routes(routes)
-#app.on_startup.append(on_startup)
+
+app.on_startup.append(on_startup)
 app.on_shutdown.append(on_shutdown)
-loop = asyncio.get_event_loop()
-loop.create_task(timer())
-loop.create_task(web._run_app(app, port=os.environ['PORT']))
-loop.run_forever()
+web.run_app(app, port=os.environ['PORT'])

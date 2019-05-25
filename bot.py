@@ -77,7 +77,7 @@ async def on_startup(_):
     webhook = await bot.get_webhook_info()
     if webhook.url:
         await bot.delete_webhook()
-    await bot.set_webhook(f'https://54.74.165.49:80/tg')
+    await bot.set_webhook(f'https://omnideskbot.herokuapp.com:80/tg')
 
 async def on_shutdown(_):
     await bot.delete_webhook()

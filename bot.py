@@ -77,7 +77,7 @@ async def on_startup(_):
     webhook = await bot.get_webhook_info()
     if webhook.url:
         await bot.delete_webhook()
-    await bot.set_webhook('https://54.74.165.49:80/tg')
+    await bot.set_webhook(f'https://54.74.165.49:{int(os.environ["PORT"])}/tg')
 
 async def on_shutdown(_):
     await bot.delete_webhook()
@@ -88,5 +88,5 @@ if __name__ == '__main__':
     app.add_routes(routes)
     app.on_startup.append(on_startup)
     app.on_shutdown.append(on_shutdown)
-    os.environ['PORT'] = '80'
-    web.run_app(app, port=80)
+
+    web.run_app(app, port=int(os.environ['PORT']))

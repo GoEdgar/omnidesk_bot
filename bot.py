@@ -67,6 +67,7 @@ async def change_status(request):
 
 @routes.get('/')
 async def hello(request):
+    print(request)
     return web.Response(text='Hello')
 
 
@@ -74,16 +75,16 @@ async def on_startup(_):
     webhook = await bot.get_webhook_info()
     if webhook.url:
         await bot.delete_webhook()
-    await bot.set_webhook(f'https://omnideskbot.herokuapp.com:80/tg')
+    await bot.set_webhook(f'https://omnideskbot.herokuapp.com/tg')
 
 async def on_shutdown(_):
     await bot.delete_webhook()
 
-if __name__ == '__main__':
-    #create_certificate()
-    app = get_new_configured_app(dp, '/tg')
-    app.add_routes(routes)
-    app.on_startup.append(on_startup)
-    app.on_shutdown.append(on_shutdown)
-    
-    web.run_app(app, port=int(os.environ['PORT']))
+#create_certificate()
+# app = get_new_configured_app(dp, '/tg')
+app = web.Application()
+app.add_routes(routes)
+app.on_startup.append(on_startup)
+app.on_shutdown.append(on_shutdown)
+
+web.run_app(app, port=int(os.environ['PORT']))

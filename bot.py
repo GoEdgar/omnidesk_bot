@@ -65,13 +65,10 @@ async def change_status(request):
         await omnidesk_msg_handler(data)
     return web.Response()
 
-#def create_certificate():
-#    flag = True
-#    for dir in os.listdir():
-#        if 'webhook_' in dir:
-#            flag = False
-#    if flag:
-#        os.system('openssl req -new -x509 -key webhook_pkey.pem -out webhook_cert.pem -days 1095')
+@routes.get('/')
+async def hello(request):
+    return web.Response(text='Hello')
+
 
 async def on_startup(_):
     webhook = await bot.get_webhook_info()
@@ -88,5 +85,5 @@ if __name__ == '__main__':
     app.add_routes(routes)
     app.on_startup.append(on_startup)
     app.on_shutdown.append(on_shutdown)
-
+    
     web.run_app(app, port=int(os.environ['PORT']))

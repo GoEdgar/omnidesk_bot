@@ -47,6 +47,22 @@ async def message(msg: types.Message):
         await reply_msg.delete()
 
 
+
+
+
+@dp.message_handler(content_types=['voice'])
+async def voice(msg: types.Message):
+    file = await bot.download_file_by_id(msg.voice.file_id)
+    case_id = await api.send_file(msg, file)
+    if case_id:
+        await msg.reply(f'Тикет номер *{case_id}* создан!')
+    else:
+        reply_msg = await msg.reply('Доставлено')
+        await asyncio.sleep(10)
+        await reply_msg.delete()
+
+    
+
 async def omnidesk_msg_handler(data):
     user_id = int(data['object[custom_user_id]'][0])
     print(user_id)
@@ -62,16 +78,16 @@ routes = web.RouteTableDef()
 async def hello(request):
     print(request)
     return web.Response(text='<Omnidesk bot> by @spooti')
-
-
+    
+    
 @routes.post('/omnidesk_message')
 async def change_status(request):
     if 'urlencode' in request.content_type:
         data = urlencoded_to_dict(await request.text())
         await omnidesk_msg_handler(data)
     return web.Response()
-
-
+    
+    
 async def on_startup(_):
     webhook = await bot.get_webhook_info()
     if webhook.url:
@@ -83,11 +99,12 @@ async def on_shutdown(_):
     await bot.delete_webhook()
 
 
+executor.start_polling(dp)
 
-app = get_new_configured_app(dp, '/tg')
-
-app.add_routes(routes)
-
-app.on_startup.append(on_startup)
-app.on_shutdown.append(on_shutdown)
-web.run_app(app, port=os.environ['PORT'])
+#app = get_new_configured_app(dp, '/tg')
+#
+#app.add_routes(routes)
+#
+#app.on_startup.append(on_startup)
+#app.on_shutdown.append(on_shutdown)
+#web.run_app(app, port=os.environ['PORT'])

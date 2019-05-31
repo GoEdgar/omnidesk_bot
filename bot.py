@@ -39,9 +39,12 @@ async def main(msg):
 @dp.message_handler()
 async def message(msg: types.Message):
     case_id = await api.send_message(msg)
+    print(case_id)
     if case_id:
+        print('создаю тикет')
         await msg.reply(f'Тикет номер *{case_id}* создан!')
     else:
+        print('отправляю')
         reply_msg = await msg.reply('Доставлено')
         await asyncio.sleep(10)
         await reply_msg.delete()

@@ -16,7 +16,9 @@ class DB():
     def select(self, query, params=()):
         cursor = self.cursor()
         cursor.execute(query, params)
-        return cursor.fetchall()
+        data = cursor.fetchall()
+        self.commit()
+        return data
     
     def commit(self):
         return self.db_conn.commit()

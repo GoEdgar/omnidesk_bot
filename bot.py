@@ -42,10 +42,10 @@ async def message(msg: types.Message):
     print(case_id)
     if case_id:
         print('создаю тикет')
-        await msg.reply(f'Тикет номер *{case_id}* создан!')
+        await msg.reply(f'✅ Тикет номер *{case_id}* создан!')
     else:
         print('отправляю')
-        reply_msg = await msg.reply('Доставлено')
+        reply_msg = await msg.reply('✅ *Доставлено*')
         await asyncio.sleep(10)
         await reply_msg.delete()
 
@@ -86,11 +86,11 @@ async def on_shutdown(_):
     await bot.delete_webhook()
 
 
-
-app = get_new_configured_app(dp, '/tg')
-
-app.add_routes(routes)
-
-app.on_startup.append(on_startup)
-app.on_shutdown.append(on_shutdown)
-web.run_app(app, port=os.environ['PORT'])
+executor.start_polling(dp)
+#app = get_new_configured_app(dp, '/tg')
+#
+#app.add_routes(routes)
+#
+#app.on_startup.append(on_startup)
+#app.on_shutdown.append(on_shutdown)
+#web.run_app(app, port=os.environ['PORT'])

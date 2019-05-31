@@ -7,8 +7,13 @@ class DB():
     
     def fast_query(self, query, params=()):
         cursor = self.cursor()
-        cursor.execute(query, params)
-        self.commit()
+        try:
+            cursor.execute(query, params)
+        except Exception as a:
+            raise a
+        finally:
+            self.commit()
+
     
     def cursor(self):
         return self.db_conn.cursor()

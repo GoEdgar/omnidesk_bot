@@ -21,7 +21,7 @@ class ApiManager:
             
             
     def get_user_identifier(self, msg):
-        if hasattr(msg.chat, 'username'):
+        if msg.chat.username:
             return '@' + msg.chat.username
         else:
             return msg.chat.first_name

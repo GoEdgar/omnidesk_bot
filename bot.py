@@ -76,10 +76,11 @@ async def change_status(request):
 
 
 async def on_startup(_):
+    wh_url = 'https://omideskbot.herokuapp.com/tg'
     webhook = await bot.get_webhook_info()
-    if webhook.url:
+    if webhook.url != wh_url:
         await bot.delete_webhook()
-    await bot.set_webhook(f'https://omideskbot.herokuapp.com/tg')
+        await bot.set_webhook(f'https://omideskbot.herokuapp.com/tg')
 
 
 

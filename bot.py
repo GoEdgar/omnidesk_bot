@@ -82,8 +82,6 @@ async def on_startup(_):
     await bot.set_webhook(f'https://omideskbot.herokuapp.com/tg')
 
 
-async def on_shutdown(_):
-    await bot.delete_webhook()
 
 
 #executor.start_polling(dp)
@@ -92,5 +90,4 @@ app = get_new_configured_app(dp, '/tg')
 app.add_routes(routes)
 
 app.on_startup.append(on_startup)
-app.on_shutdown.append(on_shutdown)
 web.run_app(app, port=os.environ['PORT'])

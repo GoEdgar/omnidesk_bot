@@ -33,7 +33,7 @@ async def main(msg):
     if is_new_user(msg.chat.id):
         await bot.send_message(msg.chat.id, f'Привет, *{msg.chat.first_name}*!')
     else:
-        await bot.send_message(msg.chat.id, f'Оставь сообщение - мы обязательно ответим')
+        await bot.send_message(msg.chat.id, f'Оставьте сообщение. Мы обязательно ответим')
 
 
 @dp.message_handler()

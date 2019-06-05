@@ -31,7 +31,7 @@ def start_filter(msg):
 @dp.message_handler(start_filter)
 async def main(msg):
     if is_new_user(msg.chat.id):
-        await bot.send_message(msg.chat.id, f'Вас приветствует бот поддержки *ДЖЕКПОТ*!'
+        await bot.send_message(msg.chat.id, f'Вас приветствует бот поддержки *ДЖЕКПОТ*! '
                                             'Оставьте свой вопрос и мы Вам обязательно ответим.')
     else:
         await bot.send_message(msg.chat.id, f'Оставьте свой вопрос и мы Вам обязательно ответим.')

@@ -38,7 +38,7 @@ async def main(msg):
 
 
 @dp.message_handler()
-async def message(msg: types.):
+async def message(msg):
     case_id = await api.send_message(msg)
     print(case_id)
     if case_id:

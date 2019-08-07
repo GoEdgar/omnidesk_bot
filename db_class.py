@@ -3,7 +3,7 @@ import psycopg2
 
 class DB():
     def __init__(self):
-        self.db_conn = psycopg2.connect('postgres://mqiofrybtfrpqa:8d2a45cfac3bb1591cc0de19d11f3e50e7cb6cc365cd609757e45c0907648503@ec2-54-228-243-238.eu-west-1.compute.amazonaws.com:5432/d8f5hg48n0uh9e')
+        self.db_conn = psycopg2.connect('postgres://wqbllaucfcdslr:82f7c6eba7f7817f806d5392cbc0872cfd6cf1d74753dc2711f5992de787342b@ec2-54-228-243-29.eu-west-1.compute.amazonaws.com:5432/daojeeg322p7sc')
     
     def fast_query(self, query, params=()):
         cursor = self.cursor()
@@ -11,7 +11,7 @@ class DB():
             cursor.execute(query, params)
         except Exception as a:
             raise a
-        finally:
+        else:
             self.commit()
 
     

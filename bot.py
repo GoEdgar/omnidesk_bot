@@ -38,7 +38,7 @@ async def main(msg):
 
 
 @dp.message_handler()
-async def message(msg: types.Message):
+async def message(msg: types.):
     case_id = await api.send_message(msg)
     print(case_id)
     if case_id:
@@ -84,7 +84,7 @@ async def on_startup(_):
         await bot.set_webhook(f'https://omideskbot.herokuapp.com/tg')
 
 
-
+executor.start_polling()
 
 #executor.start_polling(dp)
 app = get_new_configured_app(dp, '/tg')

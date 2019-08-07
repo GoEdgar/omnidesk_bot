@@ -84,7 +84,7 @@ async def on_startup(_):
         await bot.set_webhook(f'https://omideskbot.herokuapp.com/tg')
 
 
-executor.start_polling()
+
 
 #executor.start_polling(dp)
 app = get_new_configured_app(dp, '/tg')

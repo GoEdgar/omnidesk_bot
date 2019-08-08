@@ -24,13 +24,16 @@ def get_last_msg_id(user_id):
         None
 def get_user_case(user_id):
     data = db.select('select case_id, omnidesk_id from users where user_id=%s', (user_id,))
-    if data[0]:
+    if data:
         return data[0]
     else:
         None
     
 def set_user_case(user_id, case_id, omnidesk_id):
     db.fast_query('update users set case_id=%s, omnidesk_id=%s where user_id=%s', (case_id, omnidesk_id, user_id))
+
+def del_user_case(user_id):
+    db.fast_query('update users set case_id=%s, omnidesk_id=%s where user_id=%s', (user_id,))
 
 if __name__ == '__main__':
     pass

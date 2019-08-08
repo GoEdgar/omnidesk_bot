@@ -1,5 +1,6 @@
 import aiohttp
 from base64 import b64encode
+from exceptions import *
 import json
 import asyncio
 
@@ -21,12 +22,15 @@ class ApiOmnidesk:
 
     async def _post_request(self, url, json):
         async with self.session.post(url, json=json) as r:
-            if r.status == 201:
-                json = await r.json()
+            json = await r.json()
+            error = json.get('error')
+            if not error:
                 return json
             else:
-                json = await r.json()
-                raise RuntimeError(r.status)
+                if error == 'case_not_found':
+                    raise TicketNotFound(error)
+                else:
+                    raise RuntimeError(json)
 
         
     async def create_case(self, user_id, username, text):
@@ -40,7 +44,6 @@ class ApiOmnidesk:
         
         data = await self._post_request(api_url + 'cases.json', json=case)
         data = data['case']
-        case_id, omnidesk_user_id = data['case_id'], data['user_id']
         return data['case_id'], data['user_id']
     
     

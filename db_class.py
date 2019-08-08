@@ -9,9 +9,10 @@ class DB():
         cursor = self.cursor()
         try:
             cursor.execute(query, params)
+            print('done')
         except Exception as a:
             raise a
-        else:
+        finally:
             self.commit()
 
     

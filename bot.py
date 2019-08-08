@@ -2,6 +2,7 @@ import os
 import ssl
 import asyncio
 import configparser
+from exceptions import *
 from aiohttp import web
 from aiogram import Bot, Dispatcher, types, executor
 from aiogram.dispatcher.webhook import WebhookRequestHandler, get_new_configured_app
@@ -40,12 +41,10 @@ async def main(msg):
 @dp.message_handler()
 async def message(msg):
     case_id = await api.send_message(msg)
-    print(case_id)
     if case_id:
         print('создаю тикет')
         await msg.reply(f'✅ Тикет номер *{case_id}* создан!')
     else:
-        print('отправляю')
         reply_msg = await msg.reply('✅ *Доставлено*')
         await asyncio.sleep(10)
         await reply_msg.delete()
@@ -86,7 +85,8 @@ async def on_startup(_):
 
 
 
-#executor.start_polling(dp)
+executor.start_polling(dp)
+
 app = get_new_configured_app(dp, '/tg')
 
 app.add_routes(routes)

@@ -8,8 +8,9 @@ channel = 'cch159'
 
 api = ApiOmnidesk(email, token, channel)
 
+
 class ApiManager:
-    
+
     async def send_message(self, msg):
         case_id, omnidesk_id = db.get_user_case(msg.chat.id)
         if case_id:
@@ -26,7 +27,7 @@ class ApiManager:
         case_id, omnidesk_id = await api.create_case(msg.chat.id, username, msg.text)
         db.set_user_case(msg.chat.id, case_id, omnidesk_id)
         return case_id
-            
+
     def get_user_identifier(self, msg):
         if msg.chat.username:
             return '@' + msg.chat.username

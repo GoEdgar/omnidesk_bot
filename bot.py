@@ -16,13 +16,10 @@ config.read('config.ini')
 
 TOKEN = config['tokens']['bot']
 
-
-
 bot = Bot(TOKEN, parse_mode='Markdown')
 dp = Dispatcher(bot)
 
 api = ApiManager()
-
 
 
 def start_filter(msg):
@@ -33,9 +30,11 @@ def start_filter(msg):
 async def main(msg):
     if is_new_user(msg.chat.id):
         await bot.send_message(msg.chat.id, f'Вас приветствует бот поддержки *ДЖЕКПОТ*! '
-                                            'Оставьте свой вопрос и мы Вам обязательно ответим.')
+                                            'Оставьте свой вопрос и мы Вам обязательно '
+                                            'ответим.')
     else:
-        await bot.send_message(msg.chat.id, f'Оставьте свой вопрос и мы Вам обязательно ответим.')
+        await bot.send_message(msg.chat.id,
+                               f'Оставьте свой вопрос и мы Вам обязательно ответим.')
 
 
 @dp.message_handler()
@@ -57,9 +56,8 @@ async def omnidesk_msg_handler(data):
     await bot.send_message(int(user_id), text)
 
 
-
-
 routes = web.RouteTableDef()
+
 
 @routes.get('/')
 async def hello(request):
@@ -82,10 +80,6 @@ async def on_startup(_):
         await bot.delete_webhook()
         await bot.set_webhook(f'https://omideskbot.herokuapp.com/tg')
 
-
-
-
-executor.start_polling(dp)
 
 app = get_new_configured_app(dp, '/tg')
 
